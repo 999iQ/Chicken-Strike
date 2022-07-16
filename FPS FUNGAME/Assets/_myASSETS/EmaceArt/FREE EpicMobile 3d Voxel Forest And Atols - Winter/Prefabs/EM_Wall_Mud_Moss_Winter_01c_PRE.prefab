@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 2709872347359771750}
   - component: {fileID: 180022777646450860}
   - component: {fileID: -4246272513035892807}
+  - component: {fileID: 73578833324895549}
+  - component: {fileID: 24025167341035959}
+  - component: {fileID: 3561864198509045762}
   m_Layer: 0
   m_Name: EM_Wall_Mud_Moss_Winter_01c_PRE
   m_TagString: Ground
@@ -91,8 +94,47 @@ MeshCollider:
   m_GameObject: {fileID: 1837307788686469497}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6899724953141285559, guid: e3ffb3dc26bb4af4587407b3f2d51b87, type: 3}
+--- !u!65 &73578833324895549
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837307788686469497}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.076177, y: 9.904723, z: 3.571386}
+  m_Center: {x: 4.555623, y: 4.9523616, z: -0.0069486178}
+--- !u!65 &24025167341035959
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837307788686469497}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.2812214, y: 9.904723, z: 5.3191094}
+  m_Center: {x: -0.38148415, y: 4.9523616, z: 0.5669848}
+--- !u!65 &3561864198509045762
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837307788686469497}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.6366267, y: 9.904723, z: 3.595707}
+  m_Center: {x: -5.1718884, y: 4.9523616, z: 0.5378498}

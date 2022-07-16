@@ -10,7 +10,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
 {
     [Tooltip("Здоровье игрока")] // подсказка
     public float Maxhp = 100;
-    private float hp = 100;
+    public float hp = 100;
     [SerializeField] Image HpBar;
     [SerializeField] GameObject Ui; // интерфейс игрока для удаления клона
 
@@ -147,29 +147,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
 
         if (hp <= 0) // Респавн
         {
-            // получаем список игроков с именем который нас продомажил и убил но не мы
-            var ListLastDamager = PhotonNetwork.PlayerList.ToList().Find(x => x.NickName == Killer && x.NickName != photonView.Owner.NickName);
-            Debug.Log(ListLastDamager + " xaxaxaxaxa");
-
-            // ЕСЛИ ТАКОЙ ИГРОК ЕСТЬ (МЫ НЕ САМИ СДОХЛИ)
-            if(ListLastDamager != null)
-            {
-                Hashtable PlayerCustomProps = new Hashtable();
-
-                // ТО ДОБАВЛЯЕМ +1 КИЛЛ ++ НАШЕМУ ЛАСТ ДАМАГЕРУ
-                PlayerCustomProps.Add("Kills",  ((int)ListLastDamager.CustomProperties["Kills"]) + 1);
-
-                // СОХРАНЯЕМ И СООБЩАЕМ ОБ ИЗМЕНЕНИЯХ ВСЕМ ИГРОКАМ
-                ListLastDamager.SetCustomProperties(PlayerCustomProps);
-            }
-            // смерти ++ 
-            Hashtable PlayerCustomProps_2 = new Hashtable();
-            PlayerCustomProps_2.Add("Deaths", ((int)PhotonNetwork.LocalPlayer.CustomProperties["Deaths"]) + 1);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps_2);
-
-            PhotonNetwork.Destroy(gameObject);
-            spawnerManager.SpawnPlayers();
-
+            Died(Killer);
         }
         
     }
@@ -177,6 +155,32 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
     public void TakeDamage(float damage, string lastDamager)
     {
         photonView.RPC(nameof(RPC_TakeDamage), photonView.Owner, damage, lastDamager);
+    }
+
+    public void Died(string Killer)
+    {
+        // получаем список игроков с именем который нас продомажил и убил но не мы
+        var ListLastDamager = PhotonNetwork.PlayerList.ToList().Find(x => x.NickName == Killer && x.NickName != photonView.Owner.NickName);
+        Debug.Log(ListLastDamager + " xaxaxaxaxa");
+
+        // ЕСЛИ ТАКОЙ ИГРОК ЕСТЬ (МЫ НЕ САМИ СДОХЛИ)
+        if (ListLastDamager != null)
+        {
+            Hashtable PlayerCustomProps = new Hashtable();
+
+            // ТО ДОБАВЛЯЕМ +1 КИЛЛ ++ НАШЕМУ ЛАСТ ДАМАГЕРУ
+            PlayerCustomProps.Add("Kills", ((int)ListLastDamager.CustomProperties["Kills"]) + 1);
+
+            // СОХРАНЯЕМ И СООБЩАЕМ ОБ ИЗМЕНЕНИЯХ ВСЕМ ИГРОКАМ
+            ListLastDamager.SetCustomProperties(PlayerCustomProps);
+        }
+        // смерти ++ 
+        Hashtable PlayerCustomProps_2 = new Hashtable();
+        PlayerCustomProps_2.Add("Deaths", ((int)PhotonNetwork.LocalPlayer.CustomProperties["Deaths"]) + 1);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps_2);
+
+        PhotonNetwork.Destroy(gameObject);
+        spawnerManager.SpawnPlayers();
     }
 
     void ScrollItems()

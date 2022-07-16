@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 7202083404445327064}
   - component: {fileID: 6079062522596168061}
   - component: {fileID: 8338938550471681463}
-  - component: {fileID: -7720725975999289144}
+  - component: {fileID: 1722727910808962816}
+  - component: {fileID: 1178754583760136178}
+  - component: {fileID: 1303259603110605176}
   m_Layer: 0
   m_Name: EM_BLD_House_Winter_03a_PRE
   m_TagString: Ground
@@ -82,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-7720725975999289144
-MeshCollider:
+--- !u!65 &1722727910808962816
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,7 +94,32 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3848157631819753419, guid: 21b4aabec3c9d7c48a59048609bf8f09, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 12.030643, y: 3.4386537, z: 3.1920774}
+  m_Center: {x: -1.419617, y: 4.708267, z: -0.7145965}
+--- !u!65 &1178754583760136178
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546097964629050466}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.855812, y: 3.0298703, z: 3.4988027}
+  m_Center: {x: 0.03430148, y: 1.5149351, z: -0.5612336}
+--- !u!65 &1303259603110605176
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546097964629050466}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8722565, y: 2.341275, z: 3.1297994}
+  m_Center: {x: -5.9988055, y: 7.3332496, z: -0.74573743}

@@ -18,9 +18,28 @@ public class ScoreBoard : MonoBehaviourPunCallbacks
         }
     }
 
-    // cловарь для сохранения ссылки на окошко в табло по имени игрока
-    Dictionary<Player, ScoreBoardItem> scoreboardItems = new Dictionary<Player, ScoreBoardItem>();
 
+
+    // cловарь для сохранения ссылки на окошко в табло по имени игрока
+    Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
+
+
+
+    void AddScoreboardItem(Player player)
+    {
+        ScoreBoardItem item = Instantiate(scoreboardItemPrefab, container).GetComponent<ScoreBoardItem>();
+        item.Initialize(player);
+        scoreboardItems_Dic[player] = item; // добавили элемент (игрока) в словарь
+    }
+
+    void RemoveScoreboardItem(Player player)
+    {
+        Destroy(scoreboardItems_Dic[player].gameObject); // удаление плашки с игроком
+        scoreboardItems_Dic.Remove(player); // удаление из словаря (из масива)
+    }
+
+
+    //методы которые сами вызываются при входе и выходе игрока
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         AddScoreboardItem(newPlayer);
@@ -29,18 +48,5 @@ public class ScoreBoard : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         RemoveScoreboardItem(otherPlayer);
-    }
-
-    void AddScoreboardItem(Player player)
-    {
-        ScoreBoardItem item = Instantiate(scoreboardItemPrefab, container).GetComponent<ScoreBoardItem>();
-        item.Initialize(player);
-        scoreboardItems[player] = item; // добавили элемент (игрока) в словарь
-    }
-
-    void RemoveScoreboardItem(Player player)
-    {
-        Destroy(scoreboardItems[player].gameObject); // удаление плашки с игроком
-        scoreboardItems.Remove(player); // удаление из словаря (из масива)
     }
 }

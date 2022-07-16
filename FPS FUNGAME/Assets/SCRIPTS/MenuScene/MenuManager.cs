@@ -126,7 +126,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
         // ÇÀÃĞÓÇÊÀ ÊÀĞÒÛ (ÑÖÅÍÛ)
         Log("Joined the room");
-        PhotonNetwork.LoadLevel("Map_" + Random.Range(2,2));
+        PhotonNetwork.LoadLevel("Map_" + Random.Range(1,3)); // ĞÀÍÄÎÌ ÎÒ 1 ÄÎ ÊÎË-ÂÀ ÊÀĞÒ + 1
         PhotonNetwork.NickName = "" + PlayerName;
 
     }

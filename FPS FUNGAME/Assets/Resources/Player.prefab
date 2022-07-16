@@ -8447,6 +8447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Maxhp: 100
+  hp: 100
   HpBar: {fileID: 900001695439911023}
   Ui: {fileID: 6213409246610690438}
   items:
