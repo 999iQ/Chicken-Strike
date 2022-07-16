@@ -1,2 +1,2 @@
 # Chicken-Strike
-The Chicken-Strike is Online shoter game.
+The Chicken-Strike is Online FPS game.
