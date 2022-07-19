@@ -88,7 +88,8 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
         EquipItem(0); // индекс оружия = 0
 
         if (photonView.IsMine)
-        { 
+        {
+
             playerBody.SetActive(false); // отключаем тело игрока в камере
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // У ЛОКАЛЬНОГО ИГРОКА ИНГОРИМ ЛУЧИ, ФИКС СУИЦИДА 
         }
@@ -202,12 +203,10 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
             // fix выхода за пределы массива оружий
             if (itemIndex >= items.Length - 1)
             {
-                //EquipItem(0);
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, 0);
             }
             else
             {
-                //EquipItem(itemIndex + 1);
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, itemIndex + 1);
             }
         }
@@ -216,12 +215,10 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
             // fix выхода за пределы массива оружий
             if (itemIndex <= 0)
             {
-                //EquipItem(items.Length - 1);
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, items.Length - 1);
             }
             else
             {
-                //EquipItem(itemIndex - 1);
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, itemIndex - 1);
             }
         }

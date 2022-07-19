@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     private void Awake()
@@ -33,8 +33,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        // когда кто-то зашел вывод сообщения
+        // когда кто-то зашел вывод сообщения У ВСЕХ КРОМЕ ХОСТА
         Debug.LogFormat("Player {0} entered room", newPlayer.NickName);
+
+        Hashtable PlayerCustomProps = new Hashtable();
+        PlayerCustomProps["Kills"] = 0;
+        PlayerCustomProps["Deaths"] = 0;
+        // сохраняем и оповещаем остальных о настройках
+        newPlayer.SetCustomProperties(PlayerCustomProps);
+
+        Debug.Log("СРАБОТАЛ ОН ЕНТЕРЕД ЗЕ РУУМ!!!!!!!!!!!");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)

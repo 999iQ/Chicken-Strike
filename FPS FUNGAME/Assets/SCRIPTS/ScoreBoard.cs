@@ -18,17 +18,16 @@ public class ScoreBoard : MonoBehaviourPunCallbacks
         }
     }
 
-
-
     // cловарь дл€ сохранени€ ссылки на окошко в табло по имени игрока
     Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
 
-
-
     void AddScoreboardItem(Player player)
     {
+        //—ќ«ƒј®“—я —¬ќя ѕЋјЎ ј
         ScoreBoardItem item = Instantiate(scoreboardItemPrefab, container).GetComponent<ScoreBoardItem>();
+
         item.Initialize(player);
+
         scoreboardItems_Dic[player] = item; // добавили элемент (игрока) в словарь
     }
 
@@ -39,7 +38,8 @@ public class ScoreBoard : MonoBehaviourPunCallbacks
     }
 
 
-    //методы которые сами вызываютс€ при входе и выходе игрока
+    //методы которые сами вызываютс€ при входе и выходе игрока ” ¬—≈’  –ќћ≈ ’ќ—“ј Ѕјјјјјјјјјјјјјјјјјјј√√√√
+    
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         AddScoreboardItem(newPlayer);

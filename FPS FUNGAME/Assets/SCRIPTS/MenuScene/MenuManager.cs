@@ -24,8 +24,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        // синхронизация сцен и левелов юнити и сервера фотон (loadlevel)
-        //PhotonNetwork.AutomaticallySyncScene = true;
+        // синхронизация сцен и левелов юнити и сервера фотон (loadlevel) ИЗ-ЗА НЕЁ НЕ РАБОТАЮТ ОБРАТНЫЕ ВОЗОВЫ КОМНАТЫ
+        PhotonNetwork.AutomaticallySyncScene = true;
         // версия игры
         PhotonNetwork.GameVersion = "1";
 
@@ -114,13 +114,15 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() 
     {
-        // вызывается после подключения к комнате на сервере--
+        // вызывается после подключения к комнате на сервере-- У ВСЕХ КРОМЕ ХОСТА
         // создаём настройки игрока
+
         Hashtable PlayerCustomProps = new Hashtable();
         PlayerCustomProps["Kills"] = 0;
         PlayerCustomProps["Deaths"] = 0;
         // сохраняем и оповещаем остальных о настройках
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps);
+        
         Debug.Log("СРАБОТАЛ ОН ДЖОИНЕД РУУМ!!!!!!!!!!!");
 
 

@@ -10,28 +10,36 @@ public class ScoreBoardItem : MonoBehaviourPunCallbacks
 {
     // таблички для каждого игрока: убийств и смертей игроков-
     public TMP_Text usernameText, killsText, deathsText;
-    public Player _player;
+    private Player _player;
 
-    public void Initialize(Player player) // отслеживание всего, что связано с игроком
+    public void Initialize(Player player) // ЗАПОЛНЕНИЕ ПЛАШКИ
     {
         transform.name = player.NickName + "_Score";
         usernameText.text = player.NickName;
 
-        //transform.name = PlayerPrefs.GetString("PlayerName");
-        //usernameText.text = PlayerPrefs.GetString("PlayerName");
-
-
         _player = player;
-        
-        
+
+        UpdateStats();
     }
-    private void Update()
+    private void Start()
     {
-        // это можно оптимизировать методом onPlayerCustomPRop..
         usernameText.text = _player.NickName;
+    }
+    void UpdateStats()
+    {
         killsText.text = _player.CustomProperties.ContainsKey("Kills") ? _player.CustomProperties["Kills"].ToString() : "0";
         deathsText.text = _player.CustomProperties.ContainsKey("Deaths") ? _player.CustomProperties["Deaths"].ToString() : "0";
+    }
 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if(targetPlayer == _player)
+        {
+            if(changedProps.ContainsKey("Kills") || changedProps.ContainsKey("Deaths"))
+            {
+                UpdateStats();
+            }
+        }
     }
 
 
