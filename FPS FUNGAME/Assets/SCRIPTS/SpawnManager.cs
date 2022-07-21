@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
     public GameObject player;
     public Transform[] spawners;
 
-    void Start()
+    private void Start()
     {
         SpawnPlayers();
     }

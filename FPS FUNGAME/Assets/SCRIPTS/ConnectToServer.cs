@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
-    
-    void Awake()
+    private void Awake()
     {
         // отправная точка подключения к облаку (ЗАПУСКАЕТ ПОДКЛЮЧЕНИЕ)
         PhotonNetwork.ConnectUsingSettings();

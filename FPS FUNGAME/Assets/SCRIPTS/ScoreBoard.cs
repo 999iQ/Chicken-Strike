@@ -6,8 +6,8 @@ using Photon.Pun;
 
 public class ScoreBoard : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Transform container; // то куда мы спавним
-    [SerializeField] GameObject scoreboardItemPrefab; // то что мы спавним
+    [SerializeField] private Transform _container; // то куда мы спавним
+    [SerializeField] private GameObject _scoreboardItemPrefab; // то что мы спавним
 
     private void Start()
     {
@@ -19,19 +19,19 @@ public class ScoreBoard : MonoBehaviourPunCallbacks
     }
 
     // cловарь дл€ сохранени€ ссылки на окошко в табло по имени игрока
-    Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
+    private Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
 
-    void AddScoreboardItem(Player player)
+    private void AddScoreboardItem(Player player)
     {
         //—ќ«ƒј®“—я —¬ќя ѕЋјЎ ј
-        ScoreBoardItem item = Instantiate(scoreboardItemPrefab, container).GetComponent<ScoreBoardItem>();
+        ScoreBoardItem item = Instantiate(_scoreboardItemPrefab, _container).GetComponent<ScoreBoardItem>();
 
         item.Initialize(player);
 
         scoreboardItems_Dic[player] = item; // добавили элемент (игрока) в словарь
     }
 
-    void RemoveScoreboardItem(Player player)
+    private void RemoveScoreboardItem(Player player)
     {
         Destroy(scoreboardItems_Dic[player].gameObject); // удаление плашки с игроком
         scoreboardItems_Dic.Remove(player); // удаление из словар€ (из масива)

@@ -6,16 +6,17 @@ using Photon.Pun;
 
 public class UsernameDisplay : MonoBehaviour
 {
-    [SerializeField] PhotonView photonView;
-    [SerializeField] TMP_Text TMPtext;
+    [SerializeField] PhotonView _photonView;
+    [SerializeField] TMP_Text _TMPtext;
 
     private void Start()
     {
-        if(photonView.IsMine)
+        if(_photonView.IsMine)
         {
+            // отключаем свой ник
             gameObject.SetActive(false);
         }
-        TMPtext.text = photonView.Owner.NickName; // получаем ник 
+        _TMPtext.text = _photonView.Owner.NickName; // получаем ник 
     }
 
 }

@@ -5,7 +5,6 @@ using Photon.Realtime;
 using Photon.Pun;
 using TMPro;
 
-
 public class ScoreBoardItem : MonoBehaviourPunCallbacks
 {
     // таблички для каждого игрока: убийств и смертей игроков-
@@ -25,7 +24,7 @@ public class ScoreBoardItem : MonoBehaviourPunCallbacks
     {
         usernameText.text = _player.NickName;
     }
-    void UpdateStats()
+    private void UpdateStats()
     {
         killsText.text = _player.CustomProperties.ContainsKey("Kills") ? _player.CustomProperties["Kills"].ToString() : "0";
         deathsText.text = _player.CustomProperties.ContainsKey("Deaths") ? _player.CustomProperties["Deaths"].ToString() : "0";

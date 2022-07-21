@@ -19,7 +19,7 @@ public class SingleShotGun : Gun
     public AudioClip shotSFX;
     public AudioSource _audioSource;
 
-    [SerializeField] Camera cam;
+    [SerializeField] private Camera cam;
     PhotonView photonView;
 
 
@@ -43,7 +43,7 @@ public class SingleShotGun : Gun
         Shoot();
     }
 
-    void Shoot()
+    private void Shoot()
     {
         if(timeBTWshot <= 0 && Ammo > 0 && reloadFlag != true)
         {
@@ -95,7 +95,7 @@ public class SingleShotGun : Gun
     }
 
     [PunRPC]
-    void RPC_Shoot(Vector3 hitPosition, Vector3 hitNormal)
+    private void RPC_Shoot(Vector3 hitPosition, Vector3 hitNormal)
     {
         Collider[] colliders = Physics.OverlapSphere(hitPosition, 0.3f); // сфера перекрытия для приклеивания следов от пуль к врагам
         if(colliders.Length != 0)

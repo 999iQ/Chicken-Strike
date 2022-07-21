@@ -4,22 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class MenuManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Listitem itemPrefab;
-    [SerializeField] Transform roomListContent;
+    [SerializeField] private Listitem _itemPrefab;
+    [SerializeField] private Transform _roomListContent;
     public byte maxPlayersPerRoom = 8; // кол-во игроков в комнате
 
     public InputField NameRoom;
     public InputField PlayerName; // ник игрока
-    const string playerNamePrefKey = "PlayerName"; // ключ сохранения ника
+    private const string playerNamePrefKey = "PlayerName"; // ключ сохранения ника
 
     public Text LogText;
 
-    [SerializeField] string txt; // для отладки подключения
+    [SerializeField] private string _txt; // для отладки подключения
     public Text txtDebug;
 
     private void Awake()
@@ -30,6 +29,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         PhotonNetwork.GameVersion = "1";
 
     }
+
     private void Start() 
     {
 
@@ -48,23 +48,23 @@ public class MenuManager : MonoBehaviourPunCallbacks
         Log("Player's name is set to " + PhotonNetwork.NickName);
 
     }
-    void Update()
+    private void Update()
     {
         // отладка подключения к лобби и комнатам
 
         try
         {
-            if (PhotonNetwork.OfflineMode) { txt = "OFFLINE"; return; }
+            if (PhotonNetwork.OfflineMode) { _txt = "OFFLINE"; return; }
             if (PhotonNetwork.IsConnectedAndReady)
             {
-                txt = "Server= " + PhotonNetwork.ServerAddress + " | Lobby='" + PhotonNetwork.CurrentLobby?.Name + "' (" + PhotonNetwork.CurrentLobby?.Type + ") |" + PhotonNetwork.CloudRegion + "\nMaster=" + PhotonNetwork.CountOfPlayersOnMaster + " |Rooms=" + PhotonNetwork.CountOfRooms + " |Players In Rooms=" + PhotonNetwork.CountOfPlayersInRooms;
-                if (PhotonNetwork.InRoom) { txt += "\nMyRoom=" + PhotonNetwork.CurrentRoom.PlayerCount + " [" + PhotonNetwork.CurrentRoom.IsOpen + "/" + PhotonNetwork.CurrentRoom.IsVisible + "] |State=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.State + "|Client=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.ClientType + "|Version=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.AppVersion; }
-                txt += "\nVERSION PUN = " + PhotonNetwork.PunVersion;
+                _txt = "Server= " + PhotonNetwork.ServerAddress + " | Lobby='" + PhotonNetwork.CurrentLobby?.Name + "' (" + PhotonNetwork.CurrentLobby?.Type + ") |" + PhotonNetwork.CloudRegion + "\nMaster=" + PhotonNetwork.CountOfPlayersOnMaster + " |Rooms=" + PhotonNetwork.CountOfRooms + " |Players In Rooms=" + PhotonNetwork.CountOfPlayersInRooms;
+                if (PhotonNetwork.InRoom) { _txt += "\nMyRoom=" + PhotonNetwork.CurrentRoom.PlayerCount + " [" + PhotonNetwork.CurrentRoom.IsOpen + "/" + PhotonNetwork.CurrentRoom.IsVisible + "] |State=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.State + "|Client=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.ClientType + "|Version=" + PhotonNetwork.CurrentRoom.LoadBalancingClient?.AppVersion; }
+                _txt += "\nVERSION PUN = " + PhotonNetwork.PunVersion;
             }
-            else { txt = "NOT CONNECTED O.o"; }
+            else { _txt = "NOT CONNECTED O.o"; }
         }
-        catch (System.Exception ex) { txt = "(loading)... " + ex.Message; }
-        txtDebug.text = txt;
+        catch (System.Exception ex) { _txt = "(loading)... " + ex.Message; }
+        txtDebug.text = _txt;
     }
 
     public void SetPlayerName(string value) // сохранение ника
@@ -123,7 +123,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         // сохраняем и оповещаем остальных о настройках
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps);
         
-        Debug.Log("СРАБОТАЛ ОН ДЖОИНЕД РУУМ!!!!!!!!!!!");
+        Debug.Log("СРАБОТАЛ ОН ДЖОИНЕД РУУМ!");
 
 
         // ЗАГРУЗКА КАРТЫ (СЦЕНЫ)
@@ -139,8 +139,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
     }
 
 
-
-
     public override void OnConnectedToMaster()
     {
         Log("Connected to Master");
@@ -149,7 +147,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         // вызывается когда добавляются новые комнаты
 
-        foreach(Transform trans in roomListContent)
+        foreach(Transform trans in _roomListContent)
         {
             // чистим лист комнат а потом заполняем
             Destroy(trans.gameObject);
@@ -159,7 +157,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         {
             if (roomList[i].RemovedFromList)
                 continue;
-            Instantiate(itemPrefab, roomListContent).GetComponent<Listitem>().SetInfo(roomList[i]);
+            Instantiate(_itemPrefab, _roomListContent).GetComponent<Listitem>().SetInfo(roomList[i]);
         }
 
     }

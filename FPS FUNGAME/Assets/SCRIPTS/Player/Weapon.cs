@@ -11,10 +11,10 @@ public class Weapon : MonoBehaviourPunCallbacks
     public ParticleSystem muzzleFlash; // ןנופאב גûסענוכא
     public AudioClip shotSFX;
     public AudioSource audioSource;
-    [SerializeField] GameObject hitEffect;
+    [SerializeField] private GameObject _hitEffect;
 
     // RayCast
-    [SerializeField] GameObject _cam;
+    [SerializeField] private GameObject _cam;
 
     private void Update()
     {
@@ -36,7 +36,7 @@ public class Weapon : MonoBehaviourPunCallbacks
         }
 
     }
-    void Shoot()
+    private void Shoot()
     {
         audioSource.PlayOneShot(shotSFX);
         muzzleFlash.Play();
@@ -47,7 +47,7 @@ public class Weapon : MonoBehaviourPunCallbacks
         RaycastHit hit;
         if (Physics.Raycast(_cam.transform.position, transform.forward, out hit, range))
         {
-            GameObject impact = PhotonNetwork.Instantiate(hitEffect.name, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = PhotonNetwork.Instantiate(_hitEffect.name, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impact, 3f);
 
             if(hit.collider.tag == "Player")

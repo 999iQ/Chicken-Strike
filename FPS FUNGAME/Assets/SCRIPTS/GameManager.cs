@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         ValidateConnection(); // проверка соеденения
 
-        Application.targetFrameRate = 60;
-
         // Если запустили игру до подключения к серверу
         if (!PhotonNetwork.IsConnected)
         {

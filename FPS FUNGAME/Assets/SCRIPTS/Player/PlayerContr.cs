@@ -6,19 +6,19 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObservable
+public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 {
     [Tooltip("Здоровье игрока")] // подсказка
     public float Maxhp = 100;
     public float hp = 100;
-    [SerializeField] Image HpBar;
-    [SerializeField] GameObject Ui; // интерфейс игрока для удаления клона
+    [SerializeField] private Image _HpBar;
+    [SerializeField] private GameObject _Ui; // интерфейс игрока для удаления клона
 
 
     [Header("Оружие игрока")]
     [Tooltip("Массив оружий (предметов игрока)")]
-    [SerializeField] Item[] items;
-    int itemIndex, previousItemIndex = -1;
+    [SerializeField] private Item[] items;
+    private int itemIndex, previousItemIndex = -1;
     public List<Transform> weaponChildLayer = new List<Transform>(); // выключаем слой рендера у оружий для 2 камеры
 
 
@@ -30,7 +30,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
 
     public float jumpForce;
     private bool _isGround;
-    [SerializeField] IsGroundCheck isGroundCheck; // ссылка на скрипт проверки земли под ногами 
+    [SerializeField] private IsGroundCheck _isGroundCheck; // ссылка на скрипт проверки земли под ногами 
     private Rigidbody rigBody;
 
     
@@ -81,15 +81,13 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
     {
         transform.name = photonView.Owner.NickName;
         hp = Maxhp;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        spawnerManager = FindObjectOfType<SpawnManager>();
         rigBody = GetComponent<Rigidbody>();
         EquipItem(0); // индекс оружия = 0
 
         if (photonView.IsMine)
         {
-
+            spawnerManager = FindObjectOfType<SpawnManager>();
+            Cursor.lockState = CursorLockMode.Locked;
             playerBody.SetActive(false); // отключаем тело игрока в камере
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // У ЛОКАЛЬНОГО ИГРОКА ИНГОРИМ ЛУЧИ, ФИКС СУИЦИДА 
         }
@@ -103,7 +101,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
                 trans.gameObject.layer = 0; // default layer = 0
             
 
-            Destroy(Ui); // фикс двойного интерфейса 
+            Destroy(_Ui); // фикс двойного интерфейса 
 
             // если это не мы, то отключаем камеру и оружие
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -127,7 +125,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
             GetInput();
             Look();
             ScrollItems();
-            _isGround = isGroundCheck.IsGround;
+            _isGround = _isGroundCheck.IsGround;
         }
         else
         {
@@ -144,7 +142,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
     {
 
         hp -= damage;
-        HpBar.fillAmount = hp / Maxhp; // хп бар
+        _HpBar.fillAmount = hp / Maxhp; // хп бар
 
         if (hp <= 0) // Респавн
         {
@@ -231,7 +229,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
     }
 
     [PunRPC]
-    void EquipItem(int _index) // ОРУЖИЕ 
+    private void EquipItem(int _index) // ОРУЖИЕ 
     {
         // fix бага двойного нажатия и убирания оружия
         if (_index == previousItemIndex)
@@ -270,7 +268,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
     }
     private void GetInput()
     {
-        // весь код движения
+        // movement
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * speed, ref smoothMoveVelocity, smoothTime);
 
@@ -282,7 +280,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable//, IPunObserva
 
     }
 
-    void PauseManager()
+    private void PauseManager()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {

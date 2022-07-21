@@ -6,7 +6,7 @@ public class PressTABScript : MonoBehaviour
 {
     public GameObject ScoreBoardCanvas;
 
-    void Start()
+    private void Start()
     {
         ScoreBoardCanvas.SetActive(false);
     }

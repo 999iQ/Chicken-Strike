@@ -5,18 +5,17 @@ using UnityEngine;
 public class Billboard : MonoBehaviour
 {
     // скрипт который поворачивает ник игрока к камерам других игроков
-
-    Camera cam;
+    private Camera _cam;
 
     private void Update()
     {
-        if (cam == null)
-            cam = FindObjectOfType<Camera>();
+        if (_cam == null)
+            _cam = FindObjectOfType<Camera>();
 
-        if (cam == null)
+        if (_cam == null)
             return;
 
-        transform.LookAt(cam.transform);
+        transform.LookAt(_cam.transform);
         
     }
 }
