@@ -319,7 +319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -361.54, y: 97.1}
+  m_AnchoredPosition: {x: -361.53998, y: 97.1}
   m_SizeDelta: {x: 467.17, y: 548.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &121527918
@@ -634,13 +634,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae35bb24d90ccb479d867d696245b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 2049572724733978834, guid: d9aff11023157f6478fa181879b6e41e, type: 3}
-  roomListContent: {fileID: 1322688677}
+  _itemPrefab: {fileID: 2049572724733978834, guid: d9aff11023157f6478fa181879b6e41e, type: 3}
+  _roomListContent: {fileID: 1322688677}
   maxPlayersPerRoom: 10
   NameRoom: {fileID: 1513955921}
   PlayerName: {fileID: 135446210}
   LogText: {fileID: 837008410}
-  txt: 
+  _txt: 
   txtDebug: {fileID: 1785564536}
 --- !u!4 &253747217
 Transform:

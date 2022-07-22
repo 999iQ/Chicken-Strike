@@ -9,19 +9,19 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     private void Awake()
     {
-        // отправная точка подключения к облаку (ЗАПУСКАЕТ ПОДКЛЮЧЕНИЕ)
+        // РїРѕРґРєР»СЋС‡Р°РµС‚ Рє СЃРµСЂРІРµСЂСѓ
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    public override void OnConnectedToMaster() // подключились к серверу
+    public override void OnConnectedToMaster() // РѕР±СЂР°С‚РЅС‹Р№ РІС‹Р·РѕРІ РєРѕРіРґР° РїРѕРґР»РєР»СЋС‡РёР»РёСЃСЊ
     {
         SceneManager.LoadScene("Menu");
-        PhotonNetwork.JoinLobby(); // ПОДКЛЮЧЕНИЕ К ЛОББИ ОБЯЗАТЕЛЬНО ЧТОБЫ ВИДЕТЬ КОМНАТЫ
+        PhotonNetwork.JoinLobby(); // РІСЃС‚СѓРїР°РµРј РІ РґРµС„РѕР»С‚ Р»РѕР±Р±Рё РІР°Р¶РЅРѕ*
     }
 
     public override void OnDisconnected(DisconnectCause cause) 
     {
-        // не подключились к серверу (нет интернета)
+        // РѕС‚РєР»СЋС‡РёР»РёСЃСЊ РѕС‚ СЃРµСЂРІРµСЂР° (РЅР°РїСЂРёРјРµСЂ РєРёРє)
         Debug.LogWarningFormat("ERROR - Disconnected to server", cause);
     }
 

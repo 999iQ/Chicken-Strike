@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    // скрипт который поворачивает ник игрока к камерам других игроков
+    // СЃРєСЂРёРїС‚ РїРѕРІРѕСЂР°С‡РёРІР°РµС‚ РѕР±СЉРµРєС‚ Рє РёРіСЂРѕРєСѓ (Р»РѕРєР°Р»СЊРЅРѕ) (СЃР»РµРґРёС‚ Р·Р° С‚РѕР±РѕР№)
     private Camera _cam;
 
     private void Update()

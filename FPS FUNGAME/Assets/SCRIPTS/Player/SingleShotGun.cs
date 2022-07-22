@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class SingleShotGun : Gun
 {
-    [Header("Характеристики оружия")]
+    [Header("РҐР°СЂ-РєРё РѕСЂСѓР¶РёСЏ")]
     public int Ammo;
     public int AmmoInMagazin; // const
     public int AllAmmo;
@@ -52,7 +52,6 @@ public class SingleShotGun : Gun
 
             _audioSource.PlayOneShot(shotSFX);
 
-            // рейкаст из середины камеры
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             ray.origin = cam.transform.position;
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -66,12 +65,11 @@ public class SingleShotGun : Gun
 
     private IEnumerator ReloadCoroutine(int countAmmo)
     {
-        // звук
-        // ***
+        // РєРѕСЂСѓС‚РёРЅР° РїРµСЂРµР·Р°СЂСЏРґРєРё
         if (countAmmo != AmmoInMagazin)
         {
             reloadFlag = true;
-            //переместили оставшиеся пули в общую кучу если такие есть
+           
             AllAmmo += countAmmo;
             Ammo = 0;
 
@@ -84,7 +82,7 @@ public class SingleShotGun : Gun
             }
             else
             {
-                Ammo += AllAmmo; // если патронов меньше чем в магазине просто вставляем последние патроны
+                Ammo += AllAmmo; 
                 AllAmmo = 0;
             }
 
@@ -97,16 +95,16 @@ public class SingleShotGun : Gun
     [PunRPC]
     private void RPC_Shoot(Vector3 hitPosition, Vector3 hitNormal)
     {
-        Collider[] colliders = Physics.OverlapSphere(hitPosition, 0.3f); // сфера перекрытия для приклеивания следов от пуль к врагам
+        Collider[] colliders = Physics.OverlapSphere(hitPosition, 0.3f); // РґРѕР±Р°РІР»СЏРµС‚ РєРѕР»Р»Р°Р№РґРµСЂС‹ РІ РјР°СЃСЃРёРІ РґР»СЏ СѓСЃС‹РЅРѕРІРµРЅРёСЏ РІ СЂР°РґРёСѓСЃРµ СЃС„РµСЂС‹ 
         if(colliders.Length != 0)
         {
-            // создаём дырку от пули с небольшим сдвигом чтобы текстуры не накладывались
+            // СЃРѕР·РґР°С‘Рј РїСЂРµС„Р°Р± РїРѕРїР°РґР°РЅРёСЏ РЅР° РѕР±СЉРµРєС‚Рµ РІ РєРѕС‚РѕСЂС‹Р№ РїРѕРїР°Р»Рё
             GameObject bulletImpactObj = Instantiate(bulletImpactPrefab, hitPosition + hitNormal * 0.001f,
             Quaternion.LookRotation(hitNormal, Vector3.up) * bulletImpactPrefab.transform.rotation);
 
             Destroy(bulletImpactObj, 10f);
 
-            bulletImpactObj.transform.SetParent(colliders[0].transform); // приклеиваем префаб выстрела к врагу
+            bulletImpactObj.transform.SetParent(colliders[0].transform); //СѓСЃС‹РЅРѕРІР»СЏРµРј РїСЂРµС„Р°Р± РїРѕРїР°РґР°РЅРёСЏ С‡С‚РѕР±С‹ РѕРЅ РїСЂРёР»РёРї Рє РѕР±СЉРµРєС‚Сѓ :3
         }
     }
 

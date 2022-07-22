@@ -10,31 +10,30 @@ public class MenuManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Listitem _itemPrefab;
     [SerializeField] private Transform _roomListContent;
-    public byte maxPlayersPerRoom = 8; // кол-во игроков в комнате
+    public byte maxPlayersPerRoom = 8; 
 
     public InputField NameRoom;
-    public InputField PlayerName; // ник игрока
-    private const string playerNamePrefKey = "PlayerName"; // ключ сохранения ника
+    public InputField PlayerName; 
+    private const string playerNamePrefKey = "PlayerName"; // РґР»СЏ СѓРґРѕР±СЃС‚РІР°, С‡С‚РѕР±С‹ РЅРµ РѕС€РёР±РёС‚СЊСЃСЏ
 
     public Text LogText;
 
-    [SerializeField] private string _txt; // для отладки подключения
+    [SerializeField] private string _txt; // С‚РµРєСЃС‚ РґРµР±Р°РіР°
     public Text txtDebug;
 
     private void Awake()
     {
-        // синхронизация сцен и левелов юнити и сервера фотон (loadlevel) ИЗ-ЗА НЕЁ НЕ РАБОТАЮТ ОБРАТНЫЕ ВОЗОВЫ КОМНАТЫ
+        // РЅСѓР¶РЅР°СЏ РІРµС‰СЊ РЅРѕ РІС‹Р·С‹РІР°РµС‚ РЅРµСѓРґРѕР±СЃС‚РІР°, Р±РµР· РЅРµС‘ РјРѕР¶РЅРѕ Р·Р°Р№С‚Рё РІ 1 РєРѕРјРЅР°С‚Сѓ РЅР° СЂР°Р·РЅС‹Рµ РєР°СЂС‚С‹))
         PhotonNetwork.AutomaticallySyncScene = true;
-        // версия игры
+        // РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёР№
         PhotonNetwork.GameVersion = "1";
 
     }
 
     private void Start() 
     {
-
-        // ищет ник в сохранёнках
-        string defaultName = string.Empty; // пустая строчка
+        // РїРѕРґСЃС‚Р°РЅРѕРІРєР° СЃРѕС…СЂР°РЅС‘РЅРЅРѕРіРѕ РЅРёРєР° РёРіСЂРѕРєР°
+        string defaultName = string.Empty; 
         if (PlayerName != null)
         {
             if (PlayerPrefs.HasKey(playerNamePrefKey))
@@ -50,7 +49,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        // отладка подключения к лобби и комнатам
+        // РґРµР±Р°Рі Рѕ РїРѕРґРєР»СЋС‡РµРЅРёРё Рє СЃРµСЂРІРµСЂСѓ
 
         try
         {
@@ -67,21 +66,19 @@ public class MenuManager : MonoBehaviourPunCallbacks
         txtDebug.text = _txt;
     }
 
-    public void SetPlayerName(string value) // сохранение ника
+    public void SetPlayerName(string value) // Р·Р°РїРѕРјРёРЅР°РЅРёРµ РЅРёРєР°
     {
         string _value = value;
         // #Important
-        if (string.IsNullOrEmpty(value) || _value.Replace(" ","") == "") // если ника нет или это пробелы
+        if (string.IsNullOrEmpty(value) || _value.Replace(" ","") == "") // РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РґР»СЏ РЅРёРєР°
         {
             _value = "Player" + Random.Range(1, 999);
         }
 
-        _value = _value.Trim(); // метод убирает пробелы из начала и конца строки
+        _value = _value.Trim(); // СѓР±РёСЂР°РµС‚ РїСЂРѕР±РµР»С‹ СЃ РЅР°С‡Р°Р»Р° Рё РєРѕРЅС†Р° РЅРёРєР°
 
-        // сохраняем ник на сервере
         PhotonNetwork.NickName = _value;
 
-        // сохраняем ник на компе
         PlayerPrefs.SetString(playerNamePrefKey, _value);
     }
 
@@ -89,8 +86,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     
     private void Log(string message) 
     {
-        // вывод действий в лог на экран
-
+        // С‚РёРїРѕ СѓРґРѕР±РЅС‹Р№ РґРµР±Р°Рі Р»РѕРі
         Debug.Log(message);
         LogText.text += "\n";
         LogText.text += message;
@@ -100,56 +96,54 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         RoomOptions roomOptions = new RoomOptions() { MaxPlayers = maxPlayersPerRoom };
 
-        // создание комнаты с определенным кол-вом игроков
+        // СЃРѕР·РґР°РЅРёРµ РєРѕРјРЅР°С‚С‹ СЃ РѕРїС†РёСЏРјРё
         PhotonNetwork.CreateRoom(NameRoom.text, roomOptions);
     }
 
     public void JoinRoom()
     {
-        // метод для подсоеденения к комнате с именем ( также на кнопке висит этот метод )
+        // С„СѓРЅРєС†РёСЏ РІС…РѕРґР° РІ РєРѕРјРЅР°С‚Сѓ РґР»СЏ РєРЅРѕРїРєРё
         PhotonNetwork.JoinRoom(NameRoom.text);
-
     }
 
 
     public override void OnJoinedRoom() 
     {
-        // вызывается после подключения к комнате на сервере-- У ВСЕХ КРОМЕ ХОСТА
-        // создаём настройки игрока
+        // РѕР±СЂР°С‚РЅС‹Р№ РІС‹Р·РѕРІ РїРѕСЃР»Рµ РІС…РѕР¶РґРµРЅРёСЏ РІ РєРѕРјРЅР°С‚Сѓ
 
         Hashtable PlayerCustomProps = new Hashtable();
         PlayerCustomProps["Kills"] = 0;
         PlayerCustomProps["Deaths"] = 0;
-        // сохраняем и оповещаем остальных о настройках
+        // СЃРѕР·РґР°Р»Рё СЃС‚Р°С‚РёСЃС‚РёРєСѓ РёРіСЂРѕРєР°
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps);
         
-        Debug.Log("СРАБОТАЛ ОН ДЖОИНЕД РУУМ!");
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ!");
 
 
-        // ЗАГРУЗКА КАРТЫ (СЦЕНЫ)
         Log("Joined the room");
-        PhotonNetwork.LoadLevel("Map_" + Random.Range(1,3)); // РАНДОМ ОТ 1 ДО КОЛ-ВА КАРТ + 1
+        PhotonNetwork.LoadLevel("Map_" + Random.Range(1,3)); // РєРѕР»РІРѕ РєР°СЂС‚ + 1
         PhotonNetwork.NickName = "" + PlayerName;
 
     }
     public override void OnLeftRoom()
     {
-        // когда клиент (мы) вышли по какой-то причине
+        // РµСЃР»Рё РІС‹С€Р»Рё РёР· РєРѕРјРЅР°С‚С‹ Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ Р·Р°РіСЂСѓР·РєР°
         PhotonNetwork.LoadLevel("LoadingScene");
     }
 
 
     public override void OnConnectedToMaster()
     {
+        // РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ
         Log("Connected to Master");
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        // вызывается когда добавляются новые комнаты
+        // РѕР±РЅРѕРІР»РµРЅРёРµ СЃРїРёСЃРєР° РєРѕРјРЅР°С‚
 
         foreach(Transform trans in _roomListContent)
         {
-            // чистим лист комнат а потом заполняем
+            // СѓРґР°Р»СЏРµРј РІСЃРµ Рё СЃРЅРѕРІР° СЃРїР°РІРЅРёРј РІСЃРµ
             Destroy(trans.gameObject);
         }
 
@@ -165,7 +159,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        // не создалась комната
+        // РµСЃР»Рё РЅРµ РїРѕР»СѓС‡РёР»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РєРѕРјРЅР°С‚Сѓ, РѕР±С‹С‡РЅРѕ РєРѕРіРґР° С‚Р°РєРѕРµ РЅР°Р·РІР°РЅРёРµ СѓР¶Рµ РµСЃС‚СЊ
         Log("ERROR create room! Write to admin");
     }
 

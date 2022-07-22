@@ -13,7 +13,6 @@ public class PressTABScript : MonoBehaviour
 
     private void Update()
     {
-        // не доделал таб боард
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             ScoreBoardCanvas.SetActive(true);

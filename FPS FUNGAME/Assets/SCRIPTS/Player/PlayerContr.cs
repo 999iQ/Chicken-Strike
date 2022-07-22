@@ -8,21 +8,20 @@ using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 {
-    [Tooltip("Здоровье игрока")] // подсказка
+    [Tooltip("Player HP settings")]  
     public float Maxhp = 100;
     public float hp = 100;
     [SerializeField] private Image _HpBar;
-    [SerializeField] private GameObject _Ui; // интерфейс игрока для удаления клона
+    [SerializeField] private GameObject _Ui; // РґР»СЏ РѕС‚РєР»СЋС‡РµРЅРёСЏ С‡СѓР¶РѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
 
 
-    [Header("Оружие игрока")]
-    [Tooltip("Массив оружий (предметов игрока)")]
+    [Header("РџСЂРµРґРјРµС‚С‹ РІ СЂСѓРєР°С…")]
     [SerializeField] private Item[] items;
     private int itemIndex, previousItemIndex = -1;
-    public List<Transform> weaponChildLayer = new List<Transform>(); // выключаем слой рендера у оружий для 2 камеры
+    public List<Transform> weaponChildLayer = new List<Transform>(); // РґР»СЏ РѕС‚РєР»СЋС‡РµРЅРёСЏ С‡СѓР¶РѕРіРѕ СЂРµРЅРґРµСЂР° РѕСЂСѓР¶РёСЏ
 
 
-    [Header("Характеристики движения игрока")]
+    [Header("РҐР°СЂ-РєРё РґРІРёР¶РµРЅРёСЏ")]
     public float speed;
     public float smoothTime;
     Vector3 smoothMoveVelocity;
@@ -30,17 +29,16 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     public float jumpForce;
     private bool _isGround;
-    [SerializeField] private IsGroundCheck _isGroundCheck; // ссылка на скрипт проверки земли под ногами 
+    [SerializeField] private IsGroundCheck _isGroundCheck; 
     private Rigidbody rigBody;
 
     
-    [Header("Чувствительность мыши")]
+    [Header("Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚СЊ РјС‹С€Рё")]
     public float sensivityMouse;
 
-    //[Header("Статистика игрока")]
 
-    [Header("Настройки фотона и камеры")]
-    public GameObject playerBody; // тело игрока для off рендера in camera
+    [Header("РќР°СЃС‚СЂРѕР№РєРё С„РѕС‚РѕРЅР° РЅР° СЃС‚Р°СЂС‚Рµ")]
+    public GameObject playerBody; // off render model in camera
 
     public Transform itemHolder;
 
@@ -56,7 +54,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     /*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if(stream.IsWriting) //отправляем переменные для синхрона
+        if(stream.IsWriting) 
         {
             stream.SendNext(kills);
             stream.SendNext(deaths);
@@ -73,7 +71,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     {
         if (photonView.IsMine)
         {
-            photonView.Owner.NickName = PlayerPrefs.GetString("PlayerName"); // присваеваем его ник--
+            photonView.Owner.NickName = PlayerPrefs.GetString("PlayerName"); // РЅРёРє РёР· СЃРѕС…СЂР°РЅС‘РЅРѕРє
         }
         
     }
@@ -82,45 +80,44 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         transform.name = photonView.Owner.NickName;
         hp = Maxhp;
         rigBody = GetComponent<Rigidbody>();
-        EquipItem(0); // индекс оружия = 0
+        EquipItem(0); // РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‚СѓС‚ С‡С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ Р±Р°РіР° СЃ РїРµСЂРµРєР»СЋС‡РµРЅРёРµРј РѕСЂСѓР¶РёСЏ Сѓ РґСЂСѓРіРёС… РёРіСЂРѕРєРѕРІ
 
         if (photonView.IsMine)
         {
             spawnerManager = FindObjectOfType<SpawnManager>();
             Cursor.lockState = CursorLockMode.Locked;
-            playerBody.SetActive(false); // отключаем тело игрока в камере
-            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // У ЛОКАЛЬНОГО ИГРОКА ИНГОРИМ ЛУЧИ, ФИКС СУИЦИДА 
+            playerBody.SetActive(false); // РѕС‚РєР»СЋС‡Р°РµРј СЃРІРѕСЋ РјРѕРґРµР»СЊРєСѓ С‚РµР»Р° Р»РѕРєР°Р»СЊРЅРѕ
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅРѕ СЃС‚Р°РІРёРј РёРіРЅРѕСЂ СЂРµР№РєР°СЃС‚Р°, С‡С‚РѕР±С‹ РЅРµ РїРѕРїР°СЃС‚СЊ РІ СЃРµР±СЏ
         }
         
 
         if (!photonView.IsMine)
         {
-            // фикс бага, чужое оружие видно через стены
-            // var go in gameObject.GetAllChilds()
+            // С‡С‚РѕР±С‹ С‡СѓР¶РѕРµ РѕСЂСѓР¶РёРµ РЅРµ СЂРµРЅРґРµСЂРёР»РѕСЃСЊ СЃРєРІРѕР·СЊ С‚РµРєСЃС‚СѓСЂС‹ РєР°Рє РЅР°С€Рµ
             foreach (Transform trans in weaponChildLayer)
                 trans.gameObject.layer = 0; // default layer = 0
             
 
-            Destroy(_Ui); // фикс двойного интерфейса 
+            Destroy(_Ui);
 
-            // если это не мы, то отключаем камеру и оружие
+            // РІР°Р¶РЅРѕ
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(cameraRenderWeapon);
             scriptPlayerContr.enabled = false;
 
-            // fix jump отключаем одну из двух физик чтобы прыжок был плавным
+            // fix jump , else rigidbody * 2
             Destroy(rigBody);
         }
     }
 
     private void Update()
     {
-        // проверка на локального игрока
+
         if (!photonView.IsMine)
             return;
 
 
-        if (!pause) //смотрим и бегаем пока нет паузы
+        if (!pause) 
         {
             GetInput();
             Look();
@@ -137,14 +134,14 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         
     }
 
-    [PunRPC] // надо для передачи данных 
+    [PunRPC] 
     public void RPC_TakeDamage(float damage, string Killer)
     {
 
         hp -= damage;
-        _HpBar.fillAmount = hp / Maxhp; // хп бар
+        _HpBar.fillAmount = hp / Maxhp; 
 
-        if (hp <= 0) // Респавн
+        if (hp <= 0) 
         {
             Died(Killer);
         }
@@ -158,24 +155,27 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     public void Died(string Killer)
     {
-        // получаем список игроков с именем который нас продомажил и убил но не мы
+        // РїРѕР»СѓС‡Р°РµРј РЅРёРє РїРѕСЃР»РµРґРЅРµРіРѕ РґР°РјР°РіРµСЂР°, РЅРѕ РЅРµ РјС‹
         var ListLastDamager = PhotonNetwork.PlayerList.ToList().Find(x => x.NickName == Killer && x.NickName != photonView.Owner.NickName);
         Debug.Log(ListLastDamager + " xaxaxaxaxa");
 
-        // ЕСЛИ ТАКОЙ ИГРОК ЕСТЬ (МЫ НЕ САМИ СДОХЛИ)
+        // РµСЃР»Рё РјС‹ РЅРµ РІС‹РїР°Р»Рё Р·Р° РєР°СЂС‚Сѓ
         if (ListLastDamager != null)
         {
             Hashtable PlayerCustomProps = new Hashtable();
 
-            // ТО ДОБАВЛЯЕМ +1 КИЛЛ ++ НАШЕМУ ЛАСТ ДАМАГЕРУ
+            // +1 РєРёР»Р» РЅР°С€РµРјСѓ РєРёР»Р»РµСЂСѓ
             PlayerCustomProps.Add("Kills", ((int)ListLastDamager.CustomProperties["Kills"]) + 1);
 
-            // СОХРАНЯЕМ И СООБЩАЕМ ОБ ИЗМЕНЕНИЯХ ВСЕМ ИГРОКАМ
+            // СЃРѕС…СЂР°РЅРёР»Рё РµРіРѕ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
             ListLastDamager.SetCustomProperties(PlayerCustomProps);
         }
-        // смерти ++ 
+
+        // +1 СЃРјРµСЂС‚СЊ РЅР°Рј
         Hashtable PlayerCustomProps_2 = new Hashtable();
         PlayerCustomProps_2.Add("Deaths", ((int)PhotonNetwork.LocalPlayer.CustomProperties["Deaths"]) + 1);
+
+        //  СЃРѕС…СЂР°РЅРёР»Рё РќРђРЁРЈ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps_2);
 
         PhotonNetwork.Destroy(gameObject);
@@ -186,7 +186,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     {
         for (int i = 0; i < items.Length; ++i)
         {
-            // переключение оружий на кнопки цифры
+            // СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅРЅРѕРµ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РѕСЂСѓР¶РёСЏ РєР»Р°РІРёС€Р°РјРё
             if (Input.GetKeyDown((i + 1).ToString()))
             {
                 //EquipItem(i);
@@ -195,10 +195,9 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
             }
         }
 
-        // ПЕРЕКЛЮЧЕНИЕ ОРУЖИЯ КОЛЁСИКОМ МЫШКИ
+        // РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РѕСЂСѓР¶РёСЏ РєРѕР»С‘СЃРёРєРѕРј
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
         {
-            // fix выхода за пределы массива оружий
             if (itemIndex >= items.Length - 1)
             {
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, 0);
@@ -210,7 +209,6 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         }
         else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
         {
-            // fix выхода за пределы массива оружий
             if (itemIndex <= 0)
             {
                 photonView.RPC(nameof(EquipItem), RpcTarget.All, items.Length - 1);
@@ -221,7 +219,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
             }
         }
 
-        // выстрел
+        // shoot
         if(Input.GetMouseButton(0))
         {
             items[itemIndex].Use();
@@ -229,33 +227,31 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     }
 
     [PunRPC]
-    private void EquipItem(int _index) // ОРУЖИЕ 
+    private void EquipItem(int _index) // СѓРґР°Р»РµРЅРЅРѕ РјРµРЅСЏРµРј РЅР°С€Рµ РѕСЂСѓР¶РёРµ Сѓ РІСЃРµС…
     {
-        // fix бага двойного нажатия и убирания оружия
+        
         if (_index == previousItemIndex)
             return;
 
         itemIndex = _index;
 
-        // активируем оружие с этим индексом в массиве оружий
         items[itemIndex].itemGameObject.SetActive(true);
 
         if (previousItemIndex != -1)
         {
-            // после переключения оружия, прошлое оружие стан. не активным
             items[previousItemIndex].itemGameObject.SetActive(false);
         }
-        // индекс прошлого оружия приравнивается к текущему
+
         previousItemIndex = itemIndex;
 
     }
 
     private void Look()
     {
-        // игрок поворачивается
+        // РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Р№ РїРѕРІРѕСЂРѕС‚ РјС‹С€РєРѕР№ РїРѕ РҐ
         transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * sensivityMouse);
 
-        // камера, с ограничениями внизу и вверху
+        // РІРµСЂС‚РёРєР°Р»СЊРЅС‹Р№ РїРѕРІРѕСЂРѕС‚ РјС‹С€РєРѕР№ Рё РѕРіСЂР°РЅРёС‡РёС‚РµР»Рё СЃРЅРёР·Сѓ Рё СЃРІРµСЂС…Сѓ
         _mouseY += Input.GetAxisRaw("Mouse Y") * sensivityMouse;
         _mouseY = Mathf.Clamp(_mouseY, -90f, 90f);
         cameraHolder.transform.localEulerAngles = Vector3.left * _mouseY;
@@ -263,7 +259,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     private void FixedUpdate()
     {
-        // фикс движения от фпс
+        // СЃРіР»Р°Р¶РёРІР°РЅРёРµ РґРІРёР¶РµРЅРёСЏ
         rigBody.MovePosition(rigBody.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
     private void GetInput()
@@ -284,7 +280,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // пауза
+            // РїР°СѓР·Р°
             if (pauseCanvas.activeSelf == false)
             {
                 pauseCanvas.SetActive(true);

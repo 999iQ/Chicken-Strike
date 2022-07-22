@@ -6,39 +6,38 @@ using Photon.Pun;
 
 public class ScoreBoard : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Transform _container; // то куда мы спавним
-    [SerializeField] private GameObject _scoreboardItemPrefab; // то что мы спавним
+    [SerializeField] private Transform _container; // С‚Рѕ РіРґРµ СЃРїР°РІРЅСЏС‚СЃСЏ РїР»Р°С€РєРё
+    [SerializeField] private GameObject _scoreboardItemPrefab; // РїСЂРµС„Р°Р± РїР»Р°С€РєРё РґР»СЏ СЃРїР°РІРЅР°
 
     private void Start()
     {
         foreach(Player player in PhotonNetwork.PlayerList)
         {
-            // когда любой игрок заходит на сцену он добавляет себя в список
             AddScoreboardItem(player);
         }
     }
 
-    // cловарь для сохранения ссылки на окошко в табло по имени игрока
+    // СЃР»РѕРІР°СЂСЊ СЃ РёРіСЂРѕРєР°РјРё РЅР° РїР°СЂСѓ СЃ РёС… РїР»Р°С€РєРѕР№ (РґР»СЏ СѓРґРѕР±РЅРѕРіРѕ РґРѕСЃС‚СѓРїР° Рё СЃРІСЏР·Рё РјРµР¶РґСѓ РЅРёРјРё
     private Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
 
     private void AddScoreboardItem(Player player)
     {
-        //СОЗДАЁТСЯ СВОЯ ПЛАШКА
+        //СЃРїР°РІРЅРёРј РїР»Р°С€РєСѓ СЃРѕ СЃС‚Р°С‚РѕР№ Рѕ РёРіСЂРѕРєРµ
         ScoreBoardItem item = Instantiate(_scoreboardItemPrefab, _container).GetComponent<ScoreBoardItem>();
 
         item.Initialize(player);
 
-        scoreboardItems_Dic[player] = item; // добавили элемент (игрока) в словарь
+        scoreboardItems_Dic[player] = item; // РґРѕР±РѕРІР»СЏРµРј РµРіРѕ РІ СЃР»РѕРІР°СЂСЊ
     }
 
     private void RemoveScoreboardItem(Player player)
     {
-        Destroy(scoreboardItems_Dic[player].gameObject); // удаление плашки с игроком
-        scoreboardItems_Dic.Remove(player); // удаление из словаря (из масива)
+        Destroy(scoreboardItems_Dic[player].gameObject); // СѓРґР°Р»СЏРµС‚ РїР»Р°С€РєСѓ РєРѕРіРґР° РёРіСЂРѕРє РІС‹С…РѕРґРёС‚
+        scoreboardItems_Dic.Remove(player); // СѓРґР°Р»СЏРµС‚ РµРіРѕ РёР· СЃР»РѕРІР°СЂСЏ
     }
 
 
-    //методы которые сами вызываются при входе и выходе игрока У ВСЕХ КРОМЕ ХОСТА БАААААААААААААААААААГГГГ
+    //РјРµС‚РѕРґС‹ СЃСЂР°Р±Р°С‚С‹РІР°СЋС‚ РєРѕРіРґР° РёРіСЂРѕРєРё РІС…РѕРґСЏС‚ Рё РІС‹С…РѕРґСЏС‚
     
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

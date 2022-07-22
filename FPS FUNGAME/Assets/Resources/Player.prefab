@@ -5753,8 +5753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243a798026210ef49834b96cb7d82e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonView: {fileID: 136875901666349767}
-  TMPtext: {fileID: 942581647711193889}
+  _photonView: {fileID: 136875901666349767}
+  _TMPtext: {fileID: 942581647711193889}
 --- !u!1 &2316749921148551636
 GameObject:
   m_ObjectHideFlags: 0
@@ -8448,8 +8448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Maxhp: 100
   hp: 100
-  HpBar: {fileID: 900001695439911023}
-  Ui: {fileID: 6213409246610690438}
+  _HpBar: {fileID: 900001695439911023}
+  _Ui: {fileID: 6213409246610690438}
   items:
   - {fileID: 3012545215585351838}
   - {fileID: 955396484797492121}
@@ -8459,10 +8459,10 @@ MonoBehaviour:
   speed: 9
   smoothTime: 0.15
   jumpForce: 300
-  isGroundCheck: {fileID: 7608247006412197399}
+  _isGroundCheck: {fileID: 7608247006412197399}
   sensivityMouse: 5
   playerBody: {fileID: 6269396113578052131}
-  itemHolder: {fileID: 0}
+  itemHolder: {fileID: 9046101805614826970}
   cameraHolder: {fileID: 4074285031197650522}
   cameraRenderWeapon: {fileID: 8698299582158553321}
   scriptPlayerContr: {fileID: 6270759052394405098}

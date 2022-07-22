@@ -10,48 +10,38 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     private void Awake()
     {
-        ValidateConnection(); // проверка соеденения
-
-        // Если запустили игру до подключения к серверу
-        if (!PhotonNetwork.IsConnected)
-        {
-            SceneManager.LoadScene("LoadingScene");
-            return;
-        }
+        ValidateConnection(); // РїСЂРѕРІРµСЂРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ
     }
     public override void OnLeftRoom()
     {
-        //вызывается когда локальный игрок покидает комнату важно* тут сцену загружать
+        //РєРѕРіРґР° РІС‹С€Р»Рё РёР· РєРѕРјРЅР°С‚С‹ Р·Р°РїСѓСЃРєР°РµРј СЃС†РµРЅСѓ Р·Р°РіСЂСѓР·РєРё
         SceneManager.LoadScene(0);
     }
     public void Leave()
     {
-        // когда клиент (мы) вышли сами по кнопке
+        // РјРµС‚РѕРґ РґР»СЏ РєРЅРѕРїРєРё РІС‹С…РѕРґР° РёР· РјР°С‚С‡Р°
         PhotonNetwork.LeaveRoom();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        // когда кто-то зашел вывод сообщения У ВСЕХ КРОМЕ ХОСТА
         Debug.LogFormat("Player {0} entered room", newPlayer.NickName);
 
         Hashtable PlayerCustomProps = new Hashtable();
         PlayerCustomProps["Kills"] = 0;
         PlayerCustomProps["Deaths"] = 0;
-        // сохраняем и оповещаем остальных о настройках
+        // СЃРѕР·РґР°С‘Рј СЃС‚Р°С‚РёСЃС‚РёРєСѓ РёРіСЂРѕРєР°, Р”РћР”Р•Р›РђРўР¬ 
         newPlayer.SetCustomProperties(PlayerCustomProps);
 
-        Debug.Log("СРАБОТАЛ ОН ЕНТЕРЕД ЗЕ РУУМ!!!!!!!!!!!");
+        Debug.Log("РЎР РђР‘РћРўРђР› РћРќ Р•РќРўР•Р Р•Р” Р РЈРњ!");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        // когда кто-то вышел вывод сообщения
         Debug.LogFormat("Player {0} left room", otherPlayer.NickName);
     }
 
     private void ValidateConnection()
     {
-        // проверка подключения 
         if (PhotonNetwork.IsConnected) return;
         SceneManager.LoadScene(0);
     }

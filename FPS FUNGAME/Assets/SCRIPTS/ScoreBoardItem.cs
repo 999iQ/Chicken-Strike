@@ -7,11 +7,12 @@ using TMPro;
 
 public class ScoreBoardItem : MonoBehaviourPunCallbacks
 {
-    // таблички для каждого игрока: убийств и смертей игроков-
+    // РїР»Р°С€РєР° СЃРѕ СЃС‚Р°С‚РѕР№ РЅР° РўРђР‘
     public TMP_Text usernameText, killsText, deathsText;
     private Player _player;
 
-    public void Initialize(Player player) // ЗАПОЛНЕНИЕ ПЛАШКИ
+    //Р•РЎРўР¬ Р‘РђР“Р Р”РћР”Р•Р›РђРўР¬!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public void Initialize(Player player) // СЃСЂР°Р±Р°С‚С‹РІР°РµС‚ РєРѕРіРґР° Р·Р°С…РѕРґРёС‚ РЅРѕРІС‹Р№ РёРіСЂРѕРє
     {
         transform.name = player.NickName + "_Score";
         usernameText.text = player.NickName;

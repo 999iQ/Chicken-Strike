@@ -75,8 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f531cad109e3ee4a8dcc6cc8a7e42d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 4971508546966323474}
-  scoreboardItemPrefab: {fileID: 6117462614017282067, guid: 925bc89f8602c724f8d16eb8a6b7de8b, type: 3}
+  _container: {fileID: 4971508546966323474}
+  _scoreboardItemPrefab: {fileID: 6117462614017282067, guid: 925bc89f8602c724f8d16eb8a6b7de8b, type: 3}
 --- !u!1 &4971508547300952825
 GameObject:
   m_ObjectHideFlags: 0

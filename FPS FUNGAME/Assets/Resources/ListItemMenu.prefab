@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 5045322687879946372}
   - component: {fileID: 2049572724733978834}
   m_Layer: 5
-  m_Name: BUTroom_2
+  m_Name: ListItemMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,8 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef333ad09c0521e4eb245951c735b58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textName: {fileID: 5045322687042048490}
-  textPlayerCount: {fileID: 5045322687895316064}
+  _textName: {fileID: 5045322687042048490}
+  _textPlayerCount: {fileID: 5045322687895316064}
 --- !u!1 &5045322687895316066
 GameObject:
   m_ObjectHideFlags: 0
