@@ -14945,6 +14945,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9222861977402668836, guid: 01ea17b76a9ec5a42b484c7bfd2bc0e7, type: 3}
+      propertyPath: timer
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 9222861977402668837, guid: 01ea17b76a9ec5a42b484c7bfd2bc0e7, type: 3}
       propertyPath: m_RootOrder
       value: 4

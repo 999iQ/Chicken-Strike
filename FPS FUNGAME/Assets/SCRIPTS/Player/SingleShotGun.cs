@@ -10,6 +10,8 @@ public class SingleShotGun : Gun
     public int AmmoInMagazin; // const
     public int AllAmmo;
 
+    public float aimSpeed; // скорость прицеливания
+
     public float ReloadTime;
     private bool reloadFlag = false;
 
@@ -22,6 +24,9 @@ public class SingleShotGun : Gun
     [SerializeField] private Camera cam;
     PhotonView photonView;
 
+    [SerializeField] private Transform _aimPosition;
+    [SerializeField] private Transform _defaultPosition;
+
 
     private void Awake()
     {
@@ -29,8 +34,10 @@ public class SingleShotGun : Gun
         StartTimeBTWshot = timeBTWshot;
         Ammo = AmmoInMagazin;
     }
+
     private void Update()
     {
+
         timeBTWshot -= Time.deltaTime;
 
         if(Input.GetKeyDown(KeyCode.R) && reloadFlag != true) // reload
@@ -38,7 +45,21 @@ public class SingleShotGun : Gun
             StartCoroutine(ReloadCoroutine(Ammo));
         }
     }
-    public override void Use()
+
+    public override void Aim(bool _isAiming)
+    {
+        if (_isAiming)
+        {
+            // из текущего положения в положение прицеливания
+            itemGameObject.transform.position = Vector3.Lerp(_aimPosition.position, itemGameObject.transform.position, Time.deltaTime * aimSpeed);
+        }
+        else
+        {
+            // из текущего положения в дефолт от бедра
+            itemGameObject.transform.position = Vector3.Lerp(_defaultPosition.position, itemGameObject.transform.position, Time.deltaTime * aimSpeed);
+        }
+    }
+    public override void Use() // переопределение метода стрельбы
     {
         Shoot();
     }

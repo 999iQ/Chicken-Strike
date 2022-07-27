@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using TMPro;
+using System.Linq;
 
 public class ScoreBoardItem : MonoBehaviourPunCallbacks
 {
@@ -11,7 +12,8 @@ public class ScoreBoardItem : MonoBehaviourPunCallbacks
     public TMP_Text usernameText, killsText, deathsText;
     private Player _player;
 
-    //ЕСТЬ БАГИ ДОДЕЛАТЬ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private ScoreBoard _scoreBoard;
+
     public void Initialize(Player player) // срабатывает когда заходит новый игрок
     {
         transform.name = player.NickName + "_Score";
@@ -23,12 +25,16 @@ public class ScoreBoardItem : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        _scoreBoard = GetComponentInParent<ScoreBoard>();
+
+        transform.name = _player.NickName + "_Score";
         usernameText.text = _player.NickName;
     }
     private void UpdateStats()
     {
         killsText.text = _player.CustomProperties.ContainsKey("Kills") ? _player.CustomProperties["Kills"].ToString() : "0";
         deathsText.text = _player.CustomProperties.ContainsKey("Deaths") ? _player.CustomProperties["Deaths"].ToString() : "0";
+        
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)

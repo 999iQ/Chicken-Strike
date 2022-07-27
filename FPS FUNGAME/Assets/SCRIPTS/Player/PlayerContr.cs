@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -56,13 +57,11 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     {
         if(stream.IsWriting) 
         {
-            stream.SendNext(kills);
-            stream.SendNext(deaths);
+            stream.SendNext(timer);
         }
         else
         {
-            kills = (int)stream.ReceiveNext();
-            deaths = (int)stream.ReceiveNext();
+            timer = (int)stream.ReceiveNext();
         }
     }*/
 
@@ -224,6 +223,9 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         {
             items[itemIndex].Use();
         }
+
+        // прицеливание на правую кнопку мыши
+        items[itemIndex].Aim(Input.GetMouseButton(1)); 
     }
 
     [PunRPC]

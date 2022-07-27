@@ -21,10 +21,12 @@ public class MenuManager : MonoBehaviourPunCallbacks
     [SerializeField] private string _txt; // текст дебага
     public Text txtDebug;
 
+    private string _mapName = string.Empty;
+
     private void Awake()
     {
-        // нужная вещь но вызывает неудобства, без неё можно зайти в 1 комнату на разные карты))
-        PhotonNetwork.AutomaticallySyncScene = true;
+        // нужная вещь но вызывает неудобства (обратные вызовы), без неё можно зайти в 1 комнату на разные карты))
+        PhotonNetwork.AutomaticallySyncScene = false;
         // для обновлений
         PhotonNetwork.GameVersion = "1";
 
@@ -92,24 +94,32 @@ public class MenuManager : MonoBehaviourPunCallbacks
         LogText.text += message;
     }
 
-    public void CreateRoom()
-    {
-        RoomOptions roomOptions = new RoomOptions() { MaxPlayers = maxPlayersPerRoom };
-
-        // создание комнаты с опциями
-        PhotonNetwork.CreateRoom(NameRoom.text, roomOptions);
-    }
-
     public void JoinRoom()
     {
         // функция входа в комнату для кнопки
         PhotonNetwork.JoinRoom(NameRoom.text);
     }
 
+    public void CreateRoom() // мой метод
+    {
+        RoomOptions roomOptions = new RoomOptions() { MaxPlayers = maxPlayersPerRoom };
+
+        // генератор карты
+        _mapName = "Map_" + Random.Range(1, 3); // колво карт + 1
+
+        // создаем настройки комнаты для ручного синхрона сцен
+        Hashtable RoomCustomProps = new Hashtable();
+        RoomCustomProps["mapName"] = _mapName;
+        roomOptions.CustomRoomProperties = RoomCustomProps;
+
+        // создание комнаты с опциями
+        PhotonNetwork.CreateRoom(NameRoom.text, roomOptions);
+    }
 
     public override void OnJoinedRoom() 
     {
         // обратный вызов после вхождения в комнату
+        
 
         Hashtable PlayerCustomProps = new Hashtable();
         PlayerCustomProps["Kills"] = 0;
@@ -117,11 +127,15 @@ public class MenuManager : MonoBehaviourPunCallbacks
         // создали статистику игрока
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerCustomProps);
         
-        Debug.Log("�������� �� ������� ����!");
+        Debug.Log("(МЕНЮ МЕНЕДЖЕР) СРАБОТАЛ ОН ДЖОИНЕД РУМ!");
 
 
         Log("Joined the room");
-        PhotonNetwork.LoadLevel("Map_" + Random.Range(1,3)); // колво карт + 1
+
+        // ВАЖНО* ПОДГРУЖАЮ НАЗВАНИЕ СЦЕНЫ ИЗ НАСТРОЕК КОМНАТЫ (ручная синхронизация)
+        _mapName = PhotonNetwork.CurrentRoom.CustomProperties["mapName"].ToString();
+
+        PhotonNetwork.LoadLevel(_mapName);
         PhotonNetwork.NickName = "" + PlayerName;
 
     }
@@ -135,7 +149,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         // подключение к серверу
-        Log("Connected to Master");
+        Log("Connected to MASTER SERVER");
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {

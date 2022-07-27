@@ -5,21 +5,23 @@ using UnityEngine;
 public class PressTABScript : MonoBehaviour
 {
     public GameObject ScoreBoardCanvas;
+    private CanvasGroup _canvasGroup;
 
     private void Start()
     {
-        ScoreBoardCanvas.SetActive(false);
+        _canvasGroup = gameObject.GetComponentInChildren<CanvasGroup>();
+        _canvasGroup.alpha = 0;
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            ScoreBoardCanvas.SetActive(true);
+            _canvasGroup.alpha = 1;
         }
         else if (Input.GetKeyUp(KeyCode.Tab))
         {
-            ScoreBoardCanvas.SetActive(false);
+            _canvasGroup.alpha = 0;
         }
         
 
