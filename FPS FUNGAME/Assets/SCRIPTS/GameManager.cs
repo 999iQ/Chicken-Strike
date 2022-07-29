@@ -9,7 +9,10 @@ using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    private ScoreBoard scoreBoard; // ссылка на скорборд для создания плашек статистики игроков
+    [Header("Список игроков для топа")]
+    private List<Player> _playerList = new List<Player>();
+
+    private ScoreBoard _scoreBoard; // ссылка на скорборд для создания плашек статистики игроков
 
     [Header("Область переменных таймера матча")]
     [SerializeField] private double _incTimer;
@@ -17,15 +20,40 @@ public class GameManager : MonoBehaviourPunCallbacks
     private TMP_Text _textMeshTimer;
     public double timer = 300; // время матча
 
+    public void AddPlayer(Player player)
+    {
+        _playerList.Add(player);
+    }
+
+    private void RemovePlayer(Player player)
+    {
+        _playerList.Remove(player);
+    }
+
+    public void SendPlayerList()
+    {
+        Debug.Log("gameManager* Отослали список игроков");
+        Debug.Log("игроки");
+        foreach (var igrok in _playerList)
+            Debug.Log(igrok.NickName);
+
+        _scoreBoard.UpdateScoreBoard(_playerList);
+    }
+
     private void Awake()
     {
         ValidateConnection(); // проверка подключения
-        scoreBoard = FindObjectOfType<ScoreBoard>();
+        _scoreBoard = FindObjectOfType<ScoreBoard>();
 
         _textMeshTimer = GameObject.Find("TIMER").GetComponent<TMP_Text>();
     }
     private void Start()
     {
+        // ВАЖНО* добавляем себя в список на старте
+        foreach (var player in PhotonNetwork.PlayerList)
+            AddPlayer(player);
+
+
         if(PhotonNetwork.IsMasterClient)
         {
             // Хост сохраняет глобальное время сервера как стартовое в настройки команты
@@ -70,12 +98,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-
         Debug.Log("(ГЕЙММЕНЕДЖЕР) СРАБОТАЛ ОН джоинед РУМ!");
     }
     public override void OnLeftRoom()
     {
-
         //когда вышли из комнаты запускаем сцену загрузки
         SceneManager.LoadScene(0);
     }
@@ -83,24 +109,24 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.LogFormat("Player {0} entered room", newPlayer.NickName);
-
         Hashtable PlayerCustomProps = new Hashtable();
         PlayerCustomProps["Kills"] = 0;
         PlayerCustomProps["Deaths"] = 0;
         // создаём статистику игрока, ДОДЕЛАТЬ 
         newPlayer.SetCustomProperties(PlayerCustomProps);
 
-        scoreBoard.AddScoreboardItem(newPlayer); // даём ссылку на игрока в скорборд для плашки
+        // Список игроков
+        AddPlayer(newPlayer); 
 
-        Debug.Log("(ГЕЙММЕНЕДЖЕР) СРАБОТАЛ ОН ЕНТЕРЕД РУМ!");
+        Debug.Log("(ГЕЙММЕНЕДЖЕР) СРАБОТАЛ ОН ЕНТЕРЕД РУМ!" + newPlayer.NickName);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        scoreBoard.RemoveScoreboardItem(otherPlayer); // даём ссылку на игрока в скорборд для плашки
+        // Список игроков
+        RemovePlayer(otherPlayer); 
 
-        Debug.LogFormat("Player {0} left room", otherPlayer.NickName);
+        Debug.Log("(ГЕЙММЕНЕДЖЕР) СРАБОТАЛ ОН LEFT the РУМ!" + otherPlayer.NickName);
     }
 
     private void ValidateConnection()

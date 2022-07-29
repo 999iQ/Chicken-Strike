@@ -3,46 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
+using System.Linq;
 
 public class ScoreBoard : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Transform _container; // то где спавнятся плашки
-    [SerializeField] private GameObject _scoreboardItemPrefab; // префаб плашки для спавна
-
-    // словарь с игроками на пару с их плашкой (для удобного доступа и связи между ними
-    public Dictionary<Player, ScoreBoardItem> scoreboardItems_Dic = new Dictionary<Player, ScoreBoardItem>();
- 
     private void Start()
     {
-        foreach(Player player in PhotonNetwork.PlayerList)
+        // на старте все плашки прозрачные
+        foreach (var item in GetComponentsInChildren<CanvasGroup>())
+            item.alpha = 0;
+    }
+
+    public void UpdateScoreBoard(List<Player> playerList)
+    {
+        // сортируем игроков по убийствам
+        Player[] top = playerList.OrderByDescending(p => (int)p.CustomProperties["Kills"]).ToArray();
+        
+        for(int i = 0; i < top.Length; ++i)
         {
-            AddScoreboardItem(player);
+            transform.GetChild(i).GetComponent<CanvasGroup>().alpha = 1;
+            transform.GetChild(i).GetComponent<ScoreBoardItem>().usernameText.text = (i + 1)+ ". " + top[i].NickName;
+            transform.GetChild(i).GetComponent<ScoreBoardItem>().killsText.text = ((int)top[i].CustomProperties["Kills"]).ToString();
+            transform.GetChild(i).GetComponent<ScoreBoardItem>().deathsText.text = ((int)top[i].CustomProperties["Deaths"]).ToString();
         }
     }
-
-
-    public void UpdateListPlayers(Player _player, int _kills)
-    {
-        // тут должна быть сортировка списка по киллам
-    }
-
-    // методы вызываются в геймменджере
-    public void AddScoreboardItem(Player player)
-    {
-        //спавним плашку со статой о игроке
-        ScoreBoardItem item = Instantiate(_scoreboardItemPrefab, _container).GetComponent<ScoreBoardItem>();
-
-        item.Initialize(player);
-
-        scoreboardItems_Dic[player] = item; // добвляем его в словарь
-
-    }
-
-    public void RemoveScoreboardItem(Player player)
-    {
-        Destroy(scoreboardItems_Dic[player].gameObject); // удаляет плашку когда игрок выходит
-        scoreboardItems_Dic.Remove(player); // удаляет его из словаря
-
-    }
-
 }

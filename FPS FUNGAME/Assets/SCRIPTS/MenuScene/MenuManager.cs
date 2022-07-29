@@ -52,7 +52,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         // дебаг о подключении к серверу
-
         try
         {
             if (PhotonNetwork.OfflineMode) { _txt = "OFFLINE"; return; }

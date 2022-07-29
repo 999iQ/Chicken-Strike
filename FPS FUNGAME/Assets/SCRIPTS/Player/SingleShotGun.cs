@@ -27,7 +27,6 @@ public class SingleShotGun : Gun
     [SerializeField] private Transform _aimPosition;
     [SerializeField] private Transform _defaultPosition;
 
-
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -37,6 +36,8 @@ public class SingleShotGun : Gun
 
     private void Update()
     {
+        if (!photonView.IsMine)
+            return;
 
         timeBTWshot -= Time.deltaTime;
 

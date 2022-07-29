@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -21,7 +20,6 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     private int itemIndex, previousItemIndex = -1;
     public List<Transform> weaponChildLayer = new List<Transform>(); // для отключения чужого рендера оружия
 
-
     [Header("Хар-ки движения")]
     public float speed;
     public float smoothTime;
@@ -33,10 +31,8 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] private IsGroundCheck _isGroundCheck; 
     private Rigidbody rigBody;
 
-    
     [Header("Чувствительность мыши")]
     public float sensivityMouse;
-
 
     [Header("Настройки фотона на старте")]
     public GameObject playerBody; // off render model in camera
@@ -79,7 +75,8 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         transform.name = photonView.Owner.NickName;
         hp = Maxhp;
         rigBody = GetComponent<Rigidbody>();
-        EquipItem(0); // должно быть тут чтобы избежать бага с переключением оружия у других игроков
+        EquipItem(0); // ячейка оружия тут чтобы избежать бага с переключением оружия у других игроков
+
 
         if (photonView.IsMine)
         {
@@ -111,10 +108,8 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     private void Update()
     {
-
         if (!photonView.IsMine)
             return;
-
 
         if (!pause) 
         {
@@ -130,21 +125,20 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         }
         
         PauseManager();
-        
     }
+
+#region Damage and Hp
 
     [PunRPC] 
     public void RPC_TakeDamage(float damage, string Killer)
     {
-
         hp -= damage;
         _HpBar.fillAmount = hp / Maxhp; 
 
         if (hp <= 0) 
         {
             Died(Killer);
-        }
-        
+        }   
     }
 
     public void TakeDamage(float damage, string lastDamager)
@@ -154,9 +148,10 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
 
     public void Died(string Killer)
     {
-        // получаем ник последнего дамагера, но не мы
-        var ListLastDamager = PhotonNetwork.PlayerList.ToList().Find(x => x.NickName == Killer && x.NickName != photonView.Owner.NickName);
-        Debug.Log(ListLastDamager + " xaxaxaxaxa");
+        // получаем ник последнего дамагера, но не мы сами
+        var ListLastDamager = PhotonNetwork.PlayerList.ToList().Find(p => p.NickName == Killer && p.NickName != photonView.Owner.NickName);
+
+        Debug.Log(ListLastDamager + " <- твой убийца");
 
         // если мы не выпали за карту
         if (ListLastDamager != null)
@@ -180,6 +175,8 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         PhotonNetwork.Destroy(gameObject);
         spawnerManager.SpawnPlayers();
     }
+
+#endregion
 
     void ScrollItems()
     {
@@ -224,14 +221,13 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
             items[itemIndex].Use();
         }
 
-        // прицеливание на правую кнопку мыши
+        // aim прицеливание на правую кнопку мыши
         items[itemIndex].Aim(Input.GetMouseButton(1)); 
     }
 
     [PunRPC]
     private void EquipItem(int _index) // удаленно меняем наше оружие у всех
     {
-        
         if (_index == previousItemIndex)
             return;
 
@@ -245,7 +241,6 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         }
 
         previousItemIndex = itemIndex;
-
     }
 
     private void Look()
@@ -264,6 +259,7 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         // сглаживание движения
         rigBody.MovePosition(rigBody.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
+
     private void GetInput()
     {
         // movement
@@ -275,7 +271,6 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
         {
             rigBody.AddForce(transform.up * jumpForce);
         }
-
     }
 
     private void PauseManager()
@@ -299,8 +294,4 @@ public class PlayerContr : MonoBehaviourPunCallbacks, IDamageable
             }
         }
     }
-
-
-
-
 }
